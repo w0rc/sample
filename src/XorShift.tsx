@@ -56,8 +56,8 @@ class XorShift {
      * @param arr  シャッフルする配列
      * @returns シャッフル後の配列（shallow copy）
      */
-    shuffle( arr: Array<any> ){
-        const _arr: Array<any> = [];
+    shuffle<T>( arr: T[] ){
+        const _arr: T[] = [];
         for( let i=0,j=0,l=arr.length; i<l; i++){
             j = Math.floor(this.range(0,i));
             _arr[i] = (i!==j) ? _arr[j] : _arr[i];

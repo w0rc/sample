@@ -12,7 +12,7 @@ import { CubeHandle, CubeProperties, CubeMode, CubeRotateStates, IntersectObject
 const RubikCube = forwardRef<CubeHandle, CubeProperties>(
 function RubikCube( props, ref ) {
     // 共通
-    const rotationSymbols = new RotationSymbols();
+    const ROTATION_SYMBOLS = new RotationSymbols();
     const rand = new XorShift(new Date().valueOf());
     // ルービックキューブ
     const rubikCubeGroupRef = useRef<Group>( null );
@@ -153,7 +153,7 @@ function RubikCube( props, ref ) {
                 }
                 if( currentCubeMode === "demo" ){
                     // デモモードの場合はランダムに回転操作を行う
-                    rotation( rand.shuffle( rotationSymbols.all )[0] );
+                    rotation( rand.shuffle( ROTATION_SYMBOLS.notakes ).shift() );
                 }
                 if( currentCubeMode === "order" || currentCubeMode === "reverse" ){
                     // 回転記号モードの場合はキューに積まれた操作を行う
@@ -171,7 +171,14 @@ function RubikCube( props, ref ) {
     });
 
     // 回転動作
-    const rotation = function( symbolString: string, reverse?: boolean ){
+    const rotation = function( symbolString: string | undefined, reverse?: boolean ){
+        // 指示された操作名をチェック
+        const symbol = ROTATION_SYMBOLS.all.find( e => e === symbolString );
+        if( symbol === undefined ){
+            // 操作名が不明な場合はエラー
+            console.error("is NOT rotation symbol syntax:" + symbolString);
+            return;
+        }
         const group = rubikCubeGroupRef.current;
         const stats = rotateStatesRef.current;
         if( group && stats ){
@@ -181,74 +188,67 @@ function RubikCube( props, ref ) {
                 console.log("rubikcube is busy.");
             }else{
                 // 回転操作の準備
-                // console.log("rotation:"+symbolString);
-                // 指示された操作名をチェック
-                const symbol = rotationSymbols.all.find( e => e === symbolString );
-                if( symbol === undefined ){
-                    // 操作名が不明な場合はエラー
-                    console.log("it is NOT rotation symbol syntax:"+symbol);
-                }else{
-                    // 操作名を取得して回転状態の準備
-                    stats.rotateSymbol = symbol;
-                    const [symbol_base, ...sAttach] = stats.rotateSymbol.split("");
-                    // 操作対象ベクトルを取得
-                    stats.symbolVector = rotationSymbols.getVector( symbol_base );
-                    // 回転操作の開始角度（初期化）
-                    stats.currentAngle = 0;
-                    // 回転操作の終了角度（x2操作は180°／それ以外は90°）
-                    stats.targetAngle = ( sAttach.includes("2") ) ? Math.PI : Math.PI*0.5;
-                    // 回転軸ベクトルを取得：逆回しの場合は反転(negate)して逆回転化
-                    stats.rotateAxis = rotationSymbols.getRotateAxis( symbol_base );
-                    stats.rotateAxis = ( sAttach.includes("'") ) ? stats.rotateAxis.negate(): stats.rotateAxis;
-                    // 回転対象のキューブをグループ化する
-                    // const rotationGroup = stats.rotationGroup;
-                    const rotationGroup = rotationGroupRef.current;
-                    if( rotationGroup ){
-                        // 回転対象の候補キューブをリストアップ
-                        const target: Array<Object3D> = [];
-                        group.children.forEach( (cube) => {
-                            // 持ち替えの場合：すべて対象
-                            if( stats.rotateSymbol.match(/[xyz]/) ){
+                // console.log("rotation:"+symbol);
+                // 操作名を取得して回転状態の準備
+                stats.rotateSymbol = symbol;
+                const [symbol_base, ...sAttach] = stats.rotateSymbol.split("");
+                // 操作対象ベクトルを取得
+                stats.symbolVector = ROTATION_SYMBOLS.getVector( symbol_base );
+                // 回転操作の開始角度（初期化）
+                stats.currentAngle = 0;
+                // 回転操作の終了角度（x2操作は180°／それ以外は90°）
+                stats.targetAngle = ( sAttach.includes("2") ) ? Math.PI : Math.PI*0.5;
+                // 回転軸ベクトルを取得：逆回しの場合は反転(negate)して逆回転化
+                stats.rotateAxis = ROTATION_SYMBOLS.getRotateAxis( symbol_base );
+                stats.rotateAxis = ( sAttach.includes("'") ) ? stats.rotateAxis.negate(): stats.rotateAxis;
+                // 回転対象のキューブをグループ化する
+                // const rotationGroup = stats.rotationGroup;
+                const rotationGroup = rotationGroupRef.current;
+                if( rotationGroup ){
+                    // 回転対象の候補キューブをリストアップ
+                    const target: Array<Object3D> = [];
+                    group.children.forEach( (cube) => {
+                        // 持ち替えの場合：すべて対象
+                        if( stats.rotateSymbol.match(/[xyz]/) ){
+                            target.push( cube );
+                        // ２層回しの場合：回転対象ベクトルに対して直角まで（～９５度までとする）
+                        }else if( stats.rotateSymbol.match(/[w]/) ){
+                            if( cube.position.angleTo( stats.symbolVector ) < Math.PI*0.526 ){
                                 target.push( cube );
-                            // ２層回しの場合：回転対象ベクトルに対して直角まで（～９５度までとする）
-                            }else if( symbol.match(/[w]/) ){
-                                if( cube.position.angleTo( stats.symbolVector ) < Math.PI*0.526 ){
-                                    target.push( cube );
-                                }
-                            // スライスムーブの場合：回転対象ベクトルに対して直角のみ（８５～９５度までとする）
-                            }else if( symbol.match(/[MES]/) ){
-                                if(    cube.position.angleTo( stats.symbolVector ) > Math.PI*0.476 
-                                    && cube.position.angleTo( stats.symbolVector ) < Math.PI*0.526 ){
-                                    target.push( cube );
-                                }
-                            // 通常ムーブの場合：回転対象ベクトルに対して直角未満（～８５度までとする）
-                            }else{
-                                if( cube.position.angleTo( stats.symbolVector ) < Math.PI*0.476 ){
-                                    target.push( cube );
-                                }
                             }
-                        } );
-                        // 回転対象グループのローテーションをリセット
-                        rotationGroup.rotation.set( 0, 0, 0 );
-                        // 候補キューブを回転対象グループに入れる
-                        target.forEach( ( cube ) => { rotationGroup.add( cube ) } );
-                    }
-                    // 回転状態のフラグをオン
-                    stats.isRotation = true;
-                    // 回転操作の履歴を追記（逆操作の場合は履歴を削除）
-                    if( reverse ){
-                        stats.history.pop();
-                    }else{
-                        stats.history.push( stats.rotateSymbol );
-                    }
-                    // 回転操作の開始を通知
-                    if( props.onRotationStarted ) props.onRotationStarted( stats.rotateSymbol );
-                    keyInputRef.current.forEach((_,k) => {
-                        if(k!=="w"&&k!=="W"){
-                            keyInputRef.current.set(k,false);
+                        // スライスムーブの場合：回転対象ベクトルに対して直角のみ（８５～９５度までとする）
+                        }else if( stats.rotateSymbol.match(/[MES]/) ){
+                            if(    cube.position.angleTo( stats.symbolVector ) > Math.PI*0.476 
+                                && cube.position.angleTo( stats.symbolVector ) < Math.PI*0.526 ){
+                                target.push( cube );
+                            }
+                        // 通常ムーブの場合：回転対象ベクトルに対して直角未満（～８５度までとする）
+                        }else{
+                            if( cube.position.angleTo( stats.symbolVector ) < Math.PI*0.476 ){
+                                target.push( cube );
+                            }
                         }
-                    });
+                    } );
+                    // 回転対象グループのローテーションをリセット
+                    rotationGroup.rotation.set( 0, 0, 0 );
+                    // 候補キューブを回転対象グループに入れる
+                    target.forEach( ( cube ) => { rotationGroup.add( cube ) } );
                 }
+                // 回転状態のフラグをオン
+                stats.isRotation = true;
+                // 回転操作の履歴を追記（逆操作の場合は履歴を削除）
+                if( reverse ){
+                    stats.history.pop();
+                }else{
+                    stats.history.push( stats.rotateSymbol );
+                }
+                // 回転操作の開始を通知
+                if( props.onRotationStarted ) props.onRotationStarted( stats.rotateSymbol );
+                keyInputRef.current.forEach((_,k) => {
+                    if(k!=="w"&&k!=="W"){
+                        keyInputRef.current.set(k,false);
+                    }
+                });
             }
         }
     };
