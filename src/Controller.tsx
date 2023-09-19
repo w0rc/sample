@@ -102,7 +102,7 @@ function Controller( props, ref ) {
                         }
                         setOrderBtnClicked( !orderBtnClicked );
                     }}
-                    disabled={ demoBtnClicked || reverseBtnClicked }
+                    disabled={ demoBtnClicked || orderBtnClicked || reverseBtnClicked }
                 />
             </div>
 
