@@ -46,7 +46,7 @@ function App() {
                     ref={ canvasRef }>
                     {/* initialize */}
                     <OrbitControls />
-                    <ambientLight intensity={0.5} />
+                    <ambientLight intensity={0.8} />
                     <spotLight  position={[  10,  10,  10 ]} angle={0.15} penumbra={1} />
                     <pointLight position={[ -10, -10, -10 ]} />
                     {/* helper */}

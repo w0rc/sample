@@ -124,10 +124,12 @@ function RubikCube( props, ref ) {
                     // 現時点の回転角度を保持
                     stats.currentAngle += theta;
                     // 回転対象グループを回転させる
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     rotationGroup.rotateOnAxis( stats.rotateAxis!, theta );
                     // 一定角度に到達した時点で終了処理
                     if( stats.currentAngle+(theta*1.5) > stats.targetAngle ){
                         // 目標の回転角度まで回転させる
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         rotationGroup.rotateOnAxis( stats.rotateAxis!, stats.targetAngle-stats.currentAngle );
                         // 対象グループを初期グループに戻す
                         const target: Array<Object3D> = [];
