@@ -45,19 +45,15 @@
     background-color: coral;
 }
 .Controller textarea{
-    min-width: 60%;
+    min-width: 80%;
     min-height: 30px;
-}
-#inputSymbols{
-    border-width: 1px;
-    scrollbar-width: 2px;
 }
 
 div.table{
-    width: 100%;
-    display: table;
+    display: inline-flex;
 }
 div.table > div {
-    display: table-cell;
+    /* display: table-cell; */
+    min-width: 30%; 
     text-align: left;
 }

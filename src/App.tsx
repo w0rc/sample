@@ -33,9 +33,12 @@ function App() {
     
     return (
         <div className="App">
+            {/*
             <div>
                 <label>Click RubikCube! You can control the RubikCube with keyboard.</label>
             </div>
+            -->
+            */}
             <div className="Canvas-Container">
                 <Canvas
                     className="Canvas"
@@ -46,9 +49,14 @@ function App() {
                     ref={ canvasRef }>
                     {/* initialize */}
                     <OrbitControls />
-                    <ambientLight intensity={0.8} />
-                    <spotLight  position={[  10,  10,  10 ]} angle={0.15} penumbra={1} />
-                    <pointLight position={[ -10, -10, -10 ]} />
+                    <ambientLight intensity={1.0} />
+                    {/* <spotLight  position={[  10,  10,  10 ]} angle={0.15} intensity={0.8}/> */}
+                    {/* <pointLight position={[  10,  10,  10 ]} intensity={0.8}/> */}
+                    <directionalLight position={[  10,  10,  10 ]} intensity={0.8}/>
+                    <directionalLight position={[ -10, -10, -10 ]} intensity={0.8}/>
+                    <directionalLight position={[  10,  10,  10 ]} intensity={0.4}/>
+                    <directionalLight position={[  10, -10,  10 ]} intensity={0.4}/>
+
                     {/* helper */}
                     <axesHelper args={[3]} />
                     <gridHelper args={[20, 20]} position={[   0,  -3,   0]} />
@@ -81,9 +89,11 @@ function App() {
                 ref={ controllerRef }
             />
             
+            {/*
             <div className="develop">
                 <label>{ }</label>
             </div>
+            */}
         </div>
     );
 }

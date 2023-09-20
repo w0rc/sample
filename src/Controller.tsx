@@ -23,60 +23,25 @@ function Controller( props, ref ) {
 
     return (
         <div className="Controller">
-            <div>
-                <div className="table">
-                    { /** デモモードの開始ボタン */ }
-                    <div>
-                        <label htmlFor='demoBtn'>Demonstration:</label>
-                    </div>
-                    <div>
-                        <input type="button"
-                            id="demoBtn"
-                            className={ demoBtnClicked ? "clicked" : "" }
-                            value={ demoBtnClicked ? "stop" : "start" }
-                            onClick={() => {
-                                props.requestModeChange( demoBtnClicked ? "manual" : "demo" as CubeMode );
-                                setDemoBtnClicked( !demoBtnClicked );
-                            }}
-                            disabled={ reverseBtnClicked || orderBtnClicked }
-                        />
-                    </div>
-                    { /** 戻し操作の開始ボタン */ }
-                    <div>
-                        <label htmlFor='reverseBtn'>Reverse:</label>
-                    </div>
-                    <div>
-                        <input type="button"
-                            id="reverseBtn"
-                            value="reverse"
-                            //value={ reverseBtnClicked ? "stop" : "reverse" }
-                            className={ reverseBtnClicked ? "clicked" : "" }
-                            onClick={() => {
-                                if( !reverseBtnClicked ) props.requestReverse();
-                                setReverseBtnClicked( !reverseBtnClicked );
-                            }}
-                            disabled={ demoBtnClicked || orderBtnClicked || reverseBtnClicked }
-                        />
-                    </div>
-                    { /** 回転速度の指定（入力） */ }
-                    <div>
-                        <label htmlFor="speedInput">Speed:</label>
-                    </div>
-                    <div>
-                        <input type="number"
-                            id="speedInput"
-                            className="speed"
-                            value={ props.moveSpeed }
-                            onChange={(event) => {
-                                const newSpeed = parseInt( event.target.value );
-                                if( isNaN(newSpeed) || newSpeed <= 0 ){
-                                    console.log( "Speed must be >0." );
-                                }else{
-                                    props.requestSetSpeed( newSpeed );
-                                }
-                            }}
-                        />
-                    </div>
+            <div className="table">
+                { /** 回転速度の指定（入力） */ }
+                <div>
+                    <label htmlFor="speedInput">Speed:</label>
+                </div>
+                <div>
+                    <input type="number"
+                        id="speedInput"
+                        className="speed"
+                        value={ props.moveSpeed }
+                        onChange={(event) => {
+                            const newSpeed = parseInt( event.target.value );
+                            if( isNaN(newSpeed) || newSpeed <= 0 ){
+                                console.log( "Speed must be >0." );
+                            }else{
+                                props.requestSetSpeed( newSpeed );
+                            }
+                        }}
+                    />
                 </div>
             </div>
             
@@ -93,7 +58,7 @@ function Controller( props, ref ) {
                 { /** 入力した操作の開始ボタン */ }
                 <input type="button"
                     id="orderBtn"
-                    value="order"
+                    value="Order"
                     className={ orderBtnClicked ? "clicked" : "" }
                     onClick={() => {
                         if ( !orderBtnClicked ) {
@@ -111,6 +76,43 @@ function Controller( props, ref ) {
                 <label htmlFor="history">History:</label>
                 <br />
                 <textarea id="history" value={ props.history } readOnly />
+            </div>
+            
+            <div className='table'>
+                { /** デモモードの開始ボタン */ }
+                <div>
+                    <label htmlFor='demoBtn'>Demonstration:</label>
+                </div>
+                <div>
+                    <input type="button"
+                        id="demoBtn"
+                        className={ demoBtnClicked ? "clicked" : "" }
+                        value={ demoBtnClicked ? "Stop" : "Start" }
+                        onClick={() => {
+                            props.requestModeChange( demoBtnClicked ? "manual" : "demo" as CubeMode );
+                            setDemoBtnClicked( !demoBtnClicked );
+                        }}
+                        disabled={ reverseBtnClicked || orderBtnClicked }
+                    />
+                </div>
+            </div>
+            <div className='table'>
+                { /** 戻し操作の開始ボタン */ }
+                <div>
+                    <label htmlFor='reverseBtn'>Restore cube:</label>
+                </div>
+                <div>
+                    <input type="button"
+                        id="reverseBtn"
+                        value="Restore"
+                        className={ reverseBtnClicked ? "clicked" : "" }
+                        onClick={() => {
+                            if( !reverseBtnClicked ) props.requestReverse();
+                            setReverseBtnClicked( !reverseBtnClicked );
+                        }}
+                        disabled={ demoBtnClicked || orderBtnClicked || reverseBtnClicked }
+                    />
+                </div>
             </div>
         </div>
     );

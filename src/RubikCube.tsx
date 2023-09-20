@@ -46,13 +46,14 @@ function RubikCube( props, ref ) {
             }else{
                 group.name = "RubikCubeGroup";
                 // キューブをグループに追加
+                const ROUGHNESS = 0.3, OPACITY = 0.8, TRANSPARENT = false;
                 const materials = [
-                    new MeshStandardMaterial({ color: 0xCC3333, roughness: 0.3, opacity: 0.8, transparent: true }), //R:red
-                    new MeshStandardMaterial({ color: 0xCC6633, roughness: 0.3, opacity: 0.8, transparent: true }), //L:orange
-                    new MeshStandardMaterial({ color: 0xCCCCCC, roughness: 0.3, opacity: 0.8, transparent: true }), //U:white
-                    new MeshStandardMaterial({ color: 0xCCCC66, roughness: 0.3, opacity: 0.8, transparent: true }), //D:yellow
-                    new MeshStandardMaterial({ color: 0x33CC33, roughness: 0.3, opacity: 0.8, transparent: true }), //F:green
-                    new MeshStandardMaterial({ color: 0x3333CC, roughness: 0.3, opacity: 0.8, transparent: true }), //B:blue
+                    new MeshStandardMaterial({ color: 0xCC3333, roughness: ROUGHNESS, opacity: OPACITY, transparent: TRANSPARENT }), //R:red
+                    new MeshStandardMaterial({ color: 0xCC6633, roughness: ROUGHNESS, opacity: OPACITY, transparent: TRANSPARENT }), //L:orange
+                    new MeshStandardMaterial({ color: 0xCCCCCC, roughness: ROUGHNESS, opacity: OPACITY, transparent: TRANSPARENT }), //U:white
+                    new MeshStandardMaterial({ color: 0xCCCC66, roughness: ROUGHNESS, opacity: OPACITY, transparent: TRANSPARENT }), //D:yellow
+                    new MeshStandardMaterial({ color: 0x33CC33, roughness: ROUGHNESS, opacity: OPACITY, transparent: TRANSPARENT }), //F:green
+                    new MeshStandardMaterial({ color: 0x3333CC, roughness: ROUGHNESS, opacity: OPACITY, transparent: TRANSPARENT }), //B:blue
                 ];
                 const dim = 3, offset = -1, cubeMargin = 1.01;
                 for( let i=0; i<dim; i++ ){
