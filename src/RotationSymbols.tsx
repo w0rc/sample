@@ -70,7 +70,7 @@ class RotationSymbols{
         const thalf = takes.map(x => x+"2");
         const tinvhalf  = takes.map(x => x+"'2");
         const tinvhalf2 = takes.map(x => x+"'2");
-        const symbol_takes2 = symbol_takes.concat(thalf).concat(tinvhalf);
+        const symbol_takes2 = symbol_takes.concat(thalf).concat(tinvhalf).concat(tinvhalf2);
         // 回転記号のシリーズを初期化
         this.all = Array.prototype.concat(
             symbol_basics2,
