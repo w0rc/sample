@@ -13,8 +13,7 @@ const RubikCube = forwardRef<CubeHandle, CubeProperties>(
 function RubikCube( props, ref ) {
     // 共通
     const ROTATION_SYMBOLS = new RotationSymbols();
-    // console.log(ROTATION_SYMBOLS);
-    const rand = new XorShift(new Date().valueOf());
+    const RANDOM = new XorShift(new Date().valueOf());
     // ルービックキューブ
     const rubikCubeGroupRef = useRef<Group>( null );
     const rotationGroupRef = useRef<Group>( null );
@@ -155,7 +154,7 @@ function RubikCube( props, ref ) {
                 }
                 if( currentCubeMode === "demo" ){
                     // デモモードの場合はランダムに回転操作を行う
-                    rotation( rand.shuffle( ROTATION_SYMBOLS.notakes ).shift() );
+                    rotation( RANDOM.shuffle( ROTATION_SYMBOLS.notakes ).shift() );
                 }
                 if( currentCubeMode === "order" || currentCubeMode === "reverse" ){
                     // 回転記号モードの場合はキューに積まれた操作を行う
@@ -201,8 +200,8 @@ function RubikCube( props, ref ) {
                 // 回転操作の終了角度（x2操作は180°／それ以外は90°）
                 stats.targetAngle = ( sAttach.includes("2") ) ? Math.PI : Math.PI*0.5;
                 // 回転軸ベクトルを取得：逆回しの場合は反転(negate)して逆回転化
-                stats.rotateAxis = ROTATION_SYMBOLS.getRotateAxis( symbol_base );
-                stats.rotateAxis = ( sAttach.includes("'") ) ? stats.rotateAxis.negate(): stats.rotateAxis;
+                const rotateAxis = ROTATION_SYMBOLS.getRotateAxis( symbol_base );
+                stats.rotateAxis = ( sAttach.includes("'") ) ? rotateAxis.negate(): rotateAxis;
                 // 回転対象のキューブをグループ化する
                 // const rotationGroup = stats.rotationGroup;
                 const rotationGroup = rotationGroupRef.current;
