@@ -13,6 +13,7 @@ const RubikCube = forwardRef<CubeHandle, CubeProperties>(
 function RubikCube( props, ref ) {
     // 共通
     const ROTATION_SYMBOLS = new RotationSymbols();
+    // console.log(ROTATION_SYMBOLS);
     const rand = new XorShift(new Date().valueOf());
     // ルービックキューブ
     const rubikCubeGroupRef = useRef<Group>( null );
