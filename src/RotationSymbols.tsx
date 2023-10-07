@@ -43,29 +43,33 @@ class RotationSymbols{
         const half = basics.map(x => x+"2");
         const symbol_basics = basics.concat(inv).concat(half);
         // 基本１(A ,A',A2)＋(A'2)：２４パターン
-        const invhalf = basics.map(x => x+"'2");
-        const symbol_basics2 = symbol_basics.concat(invhalf);
+        const invhalf  = basics.map(x => x+"'2");
+        const invhalf2 = basics.map(x => x+"2'");
+        const symbol_basics2 = symbol_basics.concat(invhalf).concat(invhalf2);
         // ２層回し(Aw ,A'w,Aw2)：１８パターン
         const dbls  = basics.map(x => x+"w");
         const dinv  = basics.map(x => x+"'w");
         const dhalf = basics.map(x => x+"w2");
         const symbol_dbls = dbls.concat(dinv).concat(dhalf);
         // ２層回し(Aw ,A'w,Aw2)＋(A'w2)：２４パターン
-        const dinvhalf = basics.map(x => x+"'w2");
-        const symbol_dbls2 = symbol_dbls.concat(dinvhalf);
+        const dinvhalf  = basics.map(x => x+"'w2");
+        const dinvhalf2 = basics.map(x => x+"w2'");
+        const symbol_dbls2 = symbol_dbls.concat(dinvhalf).concat(dinvhalf2);
         // スライスムーブ(A ,A',A2)：９パターン
         const sinv  = slices.map(x => x+"'");
         const shalf = slices.map(x => x+"2");
         const symbol_slices = slices.concat(sinv).concat(shalf);
         // スライスムーブ(A ,A',A2)＋(A'2)：１２パターン
-        const sinvhalf = slices.map(x => x+"'2");
-        const symbol_slices2 = symbol_slices.concat(sinvhalf);
+        const sinvhalf   = slices.map(x => x+"'2");
+        const sinvhalf2  = slices.map(x => x+"2'");
+        const symbol_slices2 = symbol_slices.concat(sinvhalf).concat(sinvhalf2);
         // 持ち替え(A ,A')：６パターン
-        const tinv  = takes.map(x => x+"'");
+        const tinv = takes.map(x => x+"'");
         const symbol_takes = takes.concat(tinv);
         // 持ち替え(A ,A')+(A2, A'2)：１２パターン
-        const thalf  = takes.map(x => x+"2");
+        const thalf = takes.map(x => x+"2");
         const tinvhalf  = takes.map(x => x+"'2");
+        const tinvhalf2 = takes.map(x => x+"'2");
         const symbol_takes2 = symbol_takes.concat(thalf).concat(tinvhalf);
         // 回転記号のシリーズを初期化
         this.all = Array.prototype.concat(
